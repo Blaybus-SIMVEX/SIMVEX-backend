@@ -16,6 +16,7 @@ env:
   JAVA_VERSION: '17'
   DOCKER_IMAGE_NAME: simvex-backend
   DOCKER_REGISTRY: ghcr.io
+  IMAGE_NAME: ghcr.io/blaybus-simvex/simvex-backend
 
 jobs:
   build-and-test:
@@ -79,7 +80,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/${{ env.DOCKER_IMAGE_NAME }}
+          images: ${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=sha,prefix=main-
@@ -113,29 +114,10 @@ jobs:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
-          port: ${{ secrets.PRODUCTION_PORT || 22 }}
+          port: 22
           script: |
-            # Pull latest image
-            docker pull ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/${{ env.DOCKER_IMAGE_NAME }}:latest
-            
-            # Stop and remove old container
+            docker pull ${{ env.IMAGE_NAME }}:latest
             docker stop simvex-backend || true
             docker rm simvex-backend || true
-            
-            # Run new container
-            docker run -d \
-              --name simvex-backend \
-              --restart unless-stopped \
-              -p 8080:8080 \
-              -e SPRING_PROFILES_ACTIVE=prod \
-              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-              -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} \
-              -e DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
-              -e LLM_URL=${{ secrets.LLM_URL }} \
-              -e LLM_API_KEY=${{ secrets.LLM_API_KEY }} \
-              -e LLM_MODEL=${{ secrets.LLM_MODEL }} \
-              -e TZ=Asia/Seoul \
-              ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/${{ env.DOCKER_IMAGE_NAME }}:latest
-            
-            # Clean up old images
+            docker run -d --name simvex-backend --restart unless-stopped -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -e DATABASE_USERNAME="${{ secrets.DATABASE_USERNAME }}" -e DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}" -e LLM_URL="${{ secrets.LLM_URL }}" -e LLM_API_KEY="${{ secrets.LLM_API_KEY }}" -e LLM_MODEL="${{ secrets.LLM_MODEL }}" -e TZ=Asia/Seoul ${{ env.IMAGE_NAME }}:latest
             docker image prune -af
