@@ -127,6 +127,9 @@ jobs:
               -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
               -e DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} \
               -e DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
+              -e LLM_URL=${{ secrets.LLM_URL }} \
+              -e LLM_API_KEY=${{ secrets.LLM_API_KEY }} \
+              -e LLM_MODEL=${{ secrets.LLM_MODEL }} \
               -e TZ=Asia/Seoul \
               ${{ env.DOCKER_REGISTRY }}/${{ github.repository_owner }}/${{ env.DOCKER_IMAGE_NAME }}:latest
             
