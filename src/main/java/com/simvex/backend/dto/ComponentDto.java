@@ -13,6 +13,7 @@ public class ComponentDto {
     private Long id;
     private String name;
     private String nameEn;
+    private String modelFileUrl;
     private String material;
     private String role;
 }
