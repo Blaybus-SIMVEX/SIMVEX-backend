@@ -35,6 +35,9 @@ public class Component {
     @Column(name = "name_en", length = 100)
     private String nameEn;
 
+    @Column(name = "model_file_url", length = 500)
+    private String modelFileUrl;
+
     @Column(length = 100)
     private String material;
 

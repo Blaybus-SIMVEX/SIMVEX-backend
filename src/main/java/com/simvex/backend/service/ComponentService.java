@@ -22,6 +22,7 @@ public class ComponentService {
                 .id(component.getId())
                 .name(component.getName())
                 .nameEn(component.getNameEn())
+                .modelFileUrl(component.getModelFileUrl())
                 .material(component.getMaterial())
                 .role(component.getRole())
                 .build();

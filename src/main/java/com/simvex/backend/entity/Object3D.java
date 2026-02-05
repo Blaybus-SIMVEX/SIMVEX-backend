@@ -37,12 +37,6 @@ public class Object3D {
     @Column(name = "thumbnail_url", length = 500)
     private String thumbnailUrl;
 
-    @Column(name = "model_file_url", length = 500)
-    private String modelFileUrl;
-
-    @Column(length = 50)
-    private String category;
-
     @OneToOne(mappedBy = "object3D", cascade = CascadeType.ALL, orphanRemoval = true)
     private ProductDescription productDescription;
 
