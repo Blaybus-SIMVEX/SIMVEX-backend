@@ -2,12 +2,10 @@ package com.simvex.backend.global.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -33,47 +31,7 @@ public class ApiResponse<T> {
 		return ResponseEntity.status(code).body(new ApiResponse<>(message, data));
 	}
 
-	public static <T> ResponseEntity<ApiResponse<PageInfo<T>>> success(HttpStatus code, String message, Page<T> page) {
-		return ResponseEntity.status(code).body(new ApiResponse<>(message, new PageInfo<>(page)));
-	}
-
-	public static <T, S> ResponseEntity<ApiResponse<CursorPageInfo<T, S>>> success(HttpStatus code, String message, CursorPageInfo<T, S> cursorPageInfo) {
-		return ResponseEntity.status(code).body(new ApiResponse<>(message, cursorPageInfo));
-	}
-
 	public static <T> ResponseEntity<ApiResponse<T>> error(HttpStatus code, String message) {
 		return ResponseEntity.status(code).body(new ApiResponse<>(message, null));
-	}
-
-	@Getter
-	public static class PageInfo<T> {
-		private final List<T> content;
-		private final int page;
-		private final int size;
-		private final int totalPage;
-		private final long totalElements;
-
-		public PageInfo(Page<T> page) {
-			this.content = page.getContent();
-			this.page = page.getNumber();
-			this.size = page.getSize();
-			this.totalPage = page.getTotalPages();
-			this.totalElements = page.getTotalElements();
-		}
-	}
-
-	@Getter
-	public static class CursorPageInfo<T, S> {
-		private final List<T> content;
-		private final S nextCursor;
-		private final boolean hasNext;
-		private final int size;
-
-		public CursorPageInfo(List<T> content, S nextCursor, boolean hasNext) {
-			this.content = content;
-			this.nextCursor = nextCursor;
-			this.hasNext = hasNext;
-			this.size = content.size();
-		}
 	}
 }
