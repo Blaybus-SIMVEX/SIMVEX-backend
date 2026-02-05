@@ -116,8 +116,7 @@ jobs:
           key: ${{ secrets.PRODUCTION_SSH_KEY }}
           port: 22
           script: |
-            docker pull ${{ env.IMAGE_NAME }}:latest
-            docker stop simvex-backend || true
-            docker rm simvex-backend || true
-            docker run -d --name simvex-backend --restart unless-stopped -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod -e DATABASE_URL="${{ secrets.DATABASE_URL }}" -e DATABASE_USERNAME="${{ secrets.DATABASE_USERNAME }}" -e DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}" -e LLM_URL="${{ secrets.LLM_URL }}" -e LLM_API_KEY="${{ secrets.LLM_API_KEY }}" -e LLM_MODEL="${{ secrets.LLM_MODEL }}" -e TZ=Asia/Seoul ${{ env.IMAGE_NAME }}:latest
+            cd /opt/simvex-backend
+            docker compose pull
+            docker compose up -d
             docker image prune -af
