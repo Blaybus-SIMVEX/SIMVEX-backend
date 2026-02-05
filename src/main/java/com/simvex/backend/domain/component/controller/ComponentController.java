@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/components")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class ComponentController {
 
     private final ComponentService componentService;

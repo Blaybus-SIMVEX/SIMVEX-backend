@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/objects")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class Object3DController {
 
     private final Object3DService object3DService;
