@@ -41,7 +41,6 @@ public class Object3DService {
                 .nameEn(object3D.getNameEn())
                 .description(object3D.getDescription())
                 .thumbnailUrl(object3D.getThumbnailUrl())
-                .category(object3D.getCategory())
                 .build();
     }
 
@@ -73,8 +72,6 @@ public class Object3DService {
                 .nameEn(object3D.getNameEn())
                 .description(object3D.getDescription())
                 .thumbnailUrl(object3D.getThumbnailUrl())
-                .modelFileUrl(object3D.getModelFileUrl())
-                .category(object3D.getCategory())
                 .productDescription(productDescDto)
                 .components(componentDtos)
                 .build();
