@@ -1,26 +1,42 @@
 package com.simvex.backend.domain.object3d.dto;
 
 import com.simvex.backend.domain.component.dto.ComponentDto;
+import com.simvex.backend.domain.object3d.entity.Object3D;
 import com.simvex.backend.domain.productdescription.dto.ProductDescriptionDto;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @Builder
 public class Object3DDetailResponseDto {
-    private Long id;
-    private String name;
-    private String nameEn;
-    private String description;
-    private String thumbnailUrl;
-    private String modelFileUrl;
-    private String category;
-    private ProductDescriptionDto productDescription;
-    private List<ComponentDto> components;
+
+    private final Long id;
+    private final String name;
+    private final String nameEn;
+    private final String description;
+    private final String thumbnailUrl;
+    private final String modelFileUrl;
+    private final String category;
+    private final ProductDescriptionDto productDescription;
+    private final List<ComponentDto> components;
+
+    public static Object3DDetailResponseDto from(Object3D entity) {
+        return Object3DDetailResponseDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .nameEn(entity.getNameEn())
+                .description(entity.getDescription())
+                .thumbnailUrl(entity.getThumbnailUrl())
+                .modelFileUrl(null) // TODO: modelFileUrl 필드 추가 필요
+                .category(null) // TODO: category 필드 추가 필요
+                .productDescription(entity.getProductDescription() != null
+                        ? ProductDescriptionDto.from(entity.getProductDescription())
+                        : null)
+                .components(entity.getComponents().stream()
+                        .map(ComponentDto::from)
+                        .toList())
+                .build();
+    }
 }

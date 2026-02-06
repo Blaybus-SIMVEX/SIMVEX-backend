@@ -1,15 +1,16 @@
 package com.simvex.backend.domain.ai.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter
+@RequiredArgsConstructor
 public class AiChatResponseDto {
-    private String answer;
-    private String role;
+
+    private final String answer;
+    private final String role;
+
+    public static AiChatResponseDto of(String answer, String role) {
+        return new AiChatResponseDto(answer, role);
+    }
 }

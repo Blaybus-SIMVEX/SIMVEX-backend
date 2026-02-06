@@ -1,17 +1,24 @@
 package com.simvex.backend.domain.productdescription.dto;
 
-import lombok.AllArgsConstructor;
+import com.simvex.backend.domain.productdescription.entity.ProductDescription;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @Builder
 public class ProductDescriptionDto {
-    private Long id;
-    private String structure;
-    private String theory;
-    private String purpose;
+
+    private final Long id;
+    private final String structure;
+    private final String theory;
+    private final String purpose;
+
+    public static ProductDescriptionDto from(ProductDescription entity) {
+        return ProductDescriptionDto.builder()
+                .id(entity.getId())
+                .structure(entity.getStructure())
+                .theory(entity.getTheory())
+                .purpose(entity.getPurpose())
+                .build();
+    }
 }

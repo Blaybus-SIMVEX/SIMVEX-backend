@@ -1,19 +1,28 @@
 package com.simvex.backend.domain.component.dto;
 
-import lombok.AllArgsConstructor;
+import com.simvex.backend.domain.component.entity.Component;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @Builder
 public class ComponentDto {
-    private Long id;
-    private String name;
-    private String nameEn;
-    private String modelFileUrl;
-    private String material;
-    private String role;
+
+    private final Long id;
+    private final String name;
+    private final String nameEn;
+    private final String modelFileUrl;
+    private final String material;
+    private final String role;
+
+    public static ComponentDto from(Component entity) {
+        return ComponentDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .nameEn(entity.getNameEn())
+                .modelFileUrl(entity.getModelFileUrl())
+                .material(entity.getMaterial())
+                .role(entity.getRole())
+                .build();
+    }
 }

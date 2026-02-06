@@ -2,33 +2,31 @@ package com.simvex.backend.domain.ai.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter
+@RequiredArgsConstructor
 public class AiChatRequestDto {
 
     @NotNull(message = "Object3D ID is required")
-    private Long object3DId;
+    private final Long object3DId;
 
     @NotBlank(message = "Question is required")
-    private String question;
+    private final String question;
 
-    private List<ChatMessage> conversationHistory;
+    private final List<ChatMessage> conversationHistory;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
+    @Getter
+    @RequiredArgsConstructor
     public static class ChatMessage {
-        private String role;
-        private String content;
+        private final String role;
+        private final String content;
+
+        public static ChatMessage of(String role, String content) {
+            return new ChatMessage(role, content);
+        }
     }
 }
