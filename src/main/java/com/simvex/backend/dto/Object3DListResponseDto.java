@@ -15,5 +15,4 @@ public class Object3DListResponseDto {
     private String nameEn;
     private String description;
     private String thumbnailUrl;
-    private String category;
 }
