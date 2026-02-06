@@ -2,7 +2,6 @@ package com.simvex.backend.domain.object3d.dto;
 
 import com.simvex.backend.domain.component.dto.ComponentDto;
 import com.simvex.backend.domain.object3d.entity.Object3D;
-import com.simvex.backend.domain.productdescription.dto.ProductDescriptionDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,8 +17,7 @@ public class Object3DDetailResponseDto {
     private final String description;
     private final String thumbnailUrl;
     private final String category;
-    private final String systemPrompt;
-    private final ProductDescriptionDto productDescription;
+    private final String theory;
     private final List<ComponentDto> components;
 
     public static Object3DDetailResponseDto from(Object3D entity) {
@@ -30,10 +28,7 @@ public class Object3DDetailResponseDto {
                 .description(entity.getDescription())
                 .thumbnailUrl(entity.getThumbnailUrl())
                 .category(entity.getCategory())
-                .systemPrompt(entity.getSystemPrompt())
-                .productDescription(entity.getProductDescription() != null
-                        ? ProductDescriptionDto.from(entity.getProductDescription())
-                        : null)
+                .theory(entity.getTheory())
                 .components(entity.getComponents().stream()
                         .map(ComponentDto::from)
                         .toList())

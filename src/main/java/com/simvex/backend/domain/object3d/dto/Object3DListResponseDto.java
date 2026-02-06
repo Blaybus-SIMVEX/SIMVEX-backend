@@ -14,7 +14,6 @@ public class Object3DListResponseDto {
     private final String description;
     private final String thumbnailUrl;
     private final String category;
-    private final int componentCount;
 
     public static Object3DListResponseDto from(Object3D entity) {
         return Object3DListResponseDto.builder()
@@ -24,7 +23,6 @@ public class Object3DListResponseDto {
                 .description(entity.getDescription())
                 .thumbnailUrl(entity.getThumbnailUrl())
                 .category(entity.getCategory())
-                .componentCount(entity.getComponents().size())
                 .build();
     }
 }

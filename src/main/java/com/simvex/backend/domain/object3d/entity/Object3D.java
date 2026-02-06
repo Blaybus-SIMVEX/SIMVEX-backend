@@ -1,7 +1,6 @@
 package com.simvex.backend.domain.object3d.entity;
 
 import com.simvex.backend.domain.component.entity.Component;
-import com.simvex.backend.domain.productdescription.entity.ProductDescription;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -40,10 +39,7 @@ public class Object3D {
     private String category;
 
     @Column(columnDefinition = "TEXT")
-    private String systemPrompt;
-
-    @OneToOne(mappedBy = "object3D", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ProductDescription productDescription;
+    private String theory;
 
     @OneToMany(mappedBy = "object3D", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Component> components = new ArrayList<>();
@@ -57,12 +53,12 @@ public class Object3D {
     private LocalDateTime updatedAt;
 
     @Builder
-    private Object3D(String name, String nameEn, String description, String thumbnailUrl, String category, String systemPrompt) {
+    private Object3D(String name, String nameEn, String description, String thumbnailUrl, String category, String theory) {
         this.name = name;
         this.nameEn = nameEn;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
         this.category = category;
-        this.systemPrompt = systemPrompt;
+        this.theory = theory;
     }
 }
