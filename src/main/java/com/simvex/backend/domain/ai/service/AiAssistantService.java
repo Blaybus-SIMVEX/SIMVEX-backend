@@ -35,7 +35,7 @@ public class AiAssistantService {
     public static final int MAX_TOKENS = 256;
 
     public AiChatResponseDto chat(AiChatRequestDto requestDto) {
-        Object3D object3D = object3DRepository.findByIdWithComponents(requestDto.getObject3DId())
+        Object3D object3D = object3DRepository.findByIdWithDetails(requestDto.getObject3DId())
                 .orElseThrow(() -> new RuntimeException("Object3D not found with id: " + requestDto.getObject3DId()));
 
         String systemPrompt = buildSystemPrompt(object3D);
