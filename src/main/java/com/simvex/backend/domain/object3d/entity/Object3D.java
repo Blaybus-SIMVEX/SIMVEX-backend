@@ -4,9 +4,8 @@ import com.simvex.backend.domain.component.entity.Component;
 import com.simvex.backend.domain.productdescription.entity.ProductDescription;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,10 +16,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "object_3d")
-@Data
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Object3D {
 
     @Id
@@ -43,7 +40,6 @@ public class Object3D {
     private ProductDescription productDescription;
 
     @OneToMany(mappedBy = "object3D", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<Component> components = new ArrayList<>();
 
     @CreationTimestamp
@@ -53,4 +49,12 @@ public class Object3D {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Builder
+    private Object3D(String name, String nameEn, String description, String thumbnailUrl) {
+        this.name = name;
+        this.nameEn = nameEn;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
+    }
 }

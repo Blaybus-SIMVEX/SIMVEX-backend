@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simvex.backend.domain.object3d.entity.Object3D;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,10 +14,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "component")
-@Data
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Component {
 
     @Id
@@ -52,4 +49,14 @@ public class Component {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Builder
+    private Component(Object3D object3D, String name, String nameEn, String modelFileUrl, String material, String role) {
+        this.object3D = object3D;
+        this.name = name;
+        this.nameEn = nameEn;
+        this.modelFileUrl = modelFileUrl;
+        this.material = material;
+        this.role = role;
+    }
 }

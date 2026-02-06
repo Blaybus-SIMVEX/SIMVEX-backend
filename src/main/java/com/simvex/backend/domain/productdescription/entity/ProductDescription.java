@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.simvex.backend.domain.object3d.entity.Object3D;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,10 +14,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product_description")
-@Data
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class ProductDescription {
 
     @Id
@@ -46,4 +43,12 @@ public class ProductDescription {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Builder
+    private ProductDescription(Object3D object3D, String structure, String theory, String purpose) {
+        this.object3D = object3D;
+        this.structure = structure;
+        this.theory = theory;
+        this.purpose = purpose;
+    }
 }
