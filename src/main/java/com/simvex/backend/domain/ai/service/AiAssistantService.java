@@ -87,18 +87,6 @@ public class AiAssistantService {
             prompt.append("오브젝트 설명: ").append(object3D.getDescription()).append("\n\n");
         }
 
-        if (object3D.getProductDescription() != null) {
-            if (object3D.getProductDescription().getStructure() != null) {
-                prompt.append("구조: ").append(object3D.getProductDescription().getStructure()).append("\n");
-            }
-            if (object3D.getProductDescription().getTheory() != null) {
-                prompt.append("원리: ").append(object3D.getProductDescription().getTheory()).append("\n");
-            }
-            if (object3D.getProductDescription().getPurpose() != null) {
-                prompt.append("목적: ").append(object3D.getProductDescription().getPurpose()).append("\n");
-            }
-        }
-
         prompt.append("\n학습자의 질문에 친절하고 정확하게 답변해주세요. ");
         prompt.append("복잡한 개념은 쉽게 설명하고, 필요시 예시를 들어주세요.");
 
