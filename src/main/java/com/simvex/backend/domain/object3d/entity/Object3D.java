@@ -36,6 +36,12 @@ public class Object3D {
     @Column(name = "thumbnail_url", length = 500)
     private String thumbnailUrl;
 
+    @Column(length = 50)
+    private String category;
+
+    @Column(columnDefinition = "TEXT")
+    private String systemPrompt;
+
     @OneToOne(mappedBy = "object3D", cascade = CascadeType.ALL, orphanRemoval = true)
     private ProductDescription productDescription;
 
@@ -51,10 +57,12 @@ public class Object3D {
     private LocalDateTime updatedAt;
 
     @Builder
-    private Object3D(String name, String nameEn, String description, String thumbnailUrl) {
+    private Object3D(String name, String nameEn, String description, String thumbnailUrl, String category, String systemPrompt) {
         this.name = name;
         this.nameEn = nameEn;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
+        this.category = category;
+        this.systemPrompt = systemPrompt;
     }
 }

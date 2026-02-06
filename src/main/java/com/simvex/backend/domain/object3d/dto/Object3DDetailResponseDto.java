@@ -17,8 +17,8 @@ public class Object3DDetailResponseDto {
     private final String nameEn;
     private final String description;
     private final String thumbnailUrl;
-    private final String modelFileUrl;
     private final String category;
+    private final String systemPrompt;
     private final ProductDescriptionDto productDescription;
     private final List<ComponentDto> components;
 
@@ -29,8 +29,8 @@ public class Object3DDetailResponseDto {
                 .nameEn(entity.getNameEn())
                 .description(entity.getDescription())
                 .thumbnailUrl(entity.getThumbnailUrl())
-                .modelFileUrl(null) // TODO: modelFileUrl 필드 추가 필요
-                .category(null) // TODO: category 필드 추가 필요
+                .category(entity.getCategory())
+                .systemPrompt(entity.getSystemPrompt())
                 .productDescription(entity.getProductDescription() != null
                         ? ProductDescriptionDto.from(entity.getProductDescription())
                         : null)

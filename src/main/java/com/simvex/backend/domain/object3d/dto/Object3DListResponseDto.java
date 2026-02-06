@@ -14,6 +14,7 @@ public class Object3DListResponseDto {
     private final String description;
     private final String thumbnailUrl;
     private final String category;
+    private final int componentCount;
 
     public static Object3DListResponseDto from(Object3D entity) {
         return Object3DListResponseDto.builder()
@@ -22,7 +23,8 @@ public class Object3DListResponseDto {
                 .nameEn(entity.getNameEn())
                 .description(entity.getDescription())
                 .thumbnailUrl(entity.getThumbnailUrl())
-                .category(null) // TODO: category 필드 추가 필요
+                .category(entity.getCategory())
+                .componentCount(entity.getComponents().size())
                 .build();
     }
 }
