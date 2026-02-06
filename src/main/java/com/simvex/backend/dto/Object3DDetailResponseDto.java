@@ -17,8 +17,6 @@ public class Object3DDetailResponseDto {
     private String nameEn;
     private String description;
     private String thumbnailUrl;
-    private String modelFileUrl;
-    private String category;
     private ProductDescriptionDto productDescription;
     private List<ComponentDto> components;
 }

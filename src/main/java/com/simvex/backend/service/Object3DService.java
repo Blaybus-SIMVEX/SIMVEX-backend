@@ -62,6 +62,7 @@ public class Object3DService {
                         .name(component.getName())
                         .nameEn(component.getNameEn())
                         .material(component.getMaterial())
+                        .modelFileUrl(component.getModelFileUrl())
                         .role(component.getRole())
                         .build())
                 .collect(Collectors.toList());
