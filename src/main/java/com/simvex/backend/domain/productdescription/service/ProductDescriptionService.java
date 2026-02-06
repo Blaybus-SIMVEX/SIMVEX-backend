@@ -18,11 +18,6 @@ public class ProductDescriptionService {
         ProductDescription pd = productDescriptionRepository.findByObject3DId(object3DId)
                 .orElseThrow(() -> new RuntimeException("ProductDescription not found for object3D id: " + object3DId));
 
-        return ProductDescriptionDto.builder()
-                .id(pd.getId())
-                .structure(pd.getStructure())
-                .theory(pd.getTheory())
-                .purpose(pd.getPurpose())
-                .build();
+        return ProductDescriptionDto.from(pd);
     }
 }

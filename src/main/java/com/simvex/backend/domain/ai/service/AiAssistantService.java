@@ -71,10 +71,7 @@ public class AiAssistantService {
 
             String answer = Objects.requireNonNull(response).result().message().content();
 
-            return AiChatResponseDto.builder()
-                    .answer(answer)
-                    .role("assistant")
-                    .build();
+            return AiChatResponseDto.of(answer, "assistant");
 
         } catch (Exception e) {
             throw new RuntimeException("AI API call failed: " + e.getMessage(), e);

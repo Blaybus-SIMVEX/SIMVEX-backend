@@ -18,13 +18,6 @@ public class ComponentService {
         Component component = componentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Component not found with id: " + id));
 
-        return ComponentDto.builder()
-                .id(component.getId())
-                .name(component.getName())
-                .nameEn(component.getNameEn())
-                .modelFileUrl(component.getModelFileUrl())
-                .material(component.getMaterial())
-                .role(component.getRole())
-                .build();
+        return ComponentDto.from(component);
     }
 }
