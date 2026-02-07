@@ -10,8 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +29,12 @@ public class MemoController {
             @PathVariable Long objectId,
             @Parameter(description = "세션 토큰", required = true)
             @RequestHeader("X-Session-Token") String sessionToken,
-            @Parameter(hidden = true)
-            @PageableDefault(size = 10) Pageable pageable
+            @Parameter(description = "페이지 번호 (1부터 시작)", example = "1")
+            @RequestParam(defaultValue = "1") int page,
+            @Parameter(description = "페이지 크기", example = "8")
+            @RequestParam(defaultValue = "8") int size
     ) {
-        PageResponse<MemoResponseDto> memos = memoService.getMemos(objectId, sessionToken, pageable);
+        PageResponse<MemoResponseDto> memos = memoService.getMemos(objectId, sessionToken, PageRequest.of(page - 1, size));
         return ApiResponse.success(HttpStatus.OK, "메모 목록 조회 성공", memos);
     }
 
