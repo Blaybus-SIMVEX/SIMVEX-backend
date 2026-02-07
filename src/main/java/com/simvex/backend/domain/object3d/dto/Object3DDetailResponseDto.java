@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Schema(description = "오브젝트 상세 응답")
@@ -28,8 +29,8 @@ public class Object3DDetailResponseDto {
     @Schema(description = "썸네일 이미지 URL", example = "https://kr.object.ncloudstorage.com/simvex-bucket/drone/%EC%A1%B0%EB%A6%BD%EB%8F%841.png")
     private final String thumbnailUrl;
 
-    @Schema(description = "카테고리", example = "기계공학/항공")
-    private final String category;
+    @Schema(description = "카테고리 목록", example = "[\"기계공학\", \"항공\"]")
+    private final List<String> categories;
 
     @Schema(description = "관련 이론", example = "드론은 4개의 프로펠러(로터)를 이용해 양력을 발생시켜 비행합니다.")
     private final String theory;
@@ -44,11 +45,20 @@ public class Object3DDetailResponseDto {
                 .nameEn(entity.getNameEn())
                 .description(entity.getDescription())
                 .thumbnailUrl(entity.getThumbnailUrl())
-                .category(entity.getCategory())
+                .categories(parseCategories(entity.getCategory()))
                 .theory(entity.getTheory())
                 .components(entity.getComponents().stream()
                         .map(ComponentDto::from)
                         .toList())
                 .build();
+    }
+
+    private static List<String> parseCategories(String category) {
+        if (category == null || category.isBlank()) {
+            return List.of();
+        }
+        return Arrays.stream(category.split("/"))
+                .map(String::trim)
+                .toList();
     }
 }
