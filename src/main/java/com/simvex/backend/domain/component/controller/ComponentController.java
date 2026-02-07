@@ -28,7 +28,7 @@ public class ComponentController {
             @Parameter(description = "오브젝트 ID", required = true)
             @PathVariable Long objectId,
             @Parameter(hidden = true)
-            @PageableDefault(size = 10) Pageable pageable
+            @PageableDefault(size = 8) Pageable pageable
     ) {
         PageResponse<ComponentDto> components = componentService.getComponentsByObjectId(objectId, pageable);
         return ApiResponse.success(HttpStatus.OK, "부품 목록 조회 성공", components);

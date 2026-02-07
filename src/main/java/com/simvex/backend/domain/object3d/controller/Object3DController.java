@@ -29,7 +29,7 @@ public class Object3DController {
             @Parameter(description = "카테고리 필터 (선택)")
             @RequestParam(required = false) String category,
             @Parameter(hidden = true)
-            @PageableDefault(size = 10) Pageable pageable
+            @PageableDefault(size = 8) Pageable pageable
     ) {
         PageResponse<Object3DListResponseDto> objects = object3DService.getObjects(category, pageable);
         return ApiResponse.success(HttpStatus.OK, "오브젝트 목록 조회 성공", objects);
