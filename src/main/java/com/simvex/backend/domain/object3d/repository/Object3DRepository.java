@@ -14,8 +14,9 @@ public interface Object3DRepository extends JpaRepository<Object3D, Long> {
     // 전체 조회 (페이지네이션)
     Page<Object3D> findAll(Pageable pageable);
 
-    // 카테고리별 필터링 (페이지네이션)
-    Page<Object3D> findByCategory(String category, Pageable pageable);
+    // 카테고리별 필터링 (포함 검색)
+    @Query("SELECT o FROM Object3D o WHERE o.category LIKE %:category%")
+    Page<Object3D> findByCategory(@Param("category") String category, Pageable pageable);
 
     // 상세 조회 (컴포넌트 함께 조회)
     @Query("SELECT o FROM Object3D o " +

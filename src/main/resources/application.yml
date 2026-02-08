@@ -23,11 +23,20 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-5-mini
+          temperature: 1.0  # 이 모델은 1.0만 지원함
+      embedding:
+        options:
+          model: text-embedding-3-small
+    vectorstore:
+      pinecone:
+        api-key: ${PINECONE_API_KEY}
+        index-name: simvex
+
 server:
   port: 8080
-
-ai:
-  api:
-    url: ${LLM_URL}
-    key: ${LLM_API_KEY}
-    model: ${LLM_MODEL}
