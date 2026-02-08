@@ -2,6 +2,7 @@ package com.simvex.backend.domain.object3d.controller;
 
 import com.simvex.backend.domain.object3d.dto.Object3DDetailResponseDto;
 import com.simvex.backend.domain.object3d.dto.Object3DListResponseDto;
+import com.simvex.backend.domain.object3d.entity.Category;
 import com.simvex.backend.domain.object3d.service.Object3DService;
 import com.simvex.backend.global.common.ApiResponse;
 import com.simvex.backend.global.common.PageResponse;
@@ -26,7 +27,7 @@ public class Object3DController {
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<Object3DListResponseDto>>> getObjects(
             @Parameter(description = "카테고리 필터 (선택)")
-            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Category category,
             @Parameter(description = "페이지 번호 (1부터 시작)", example = "1")
             @RequestParam(defaultValue = "1") int page,
             @Parameter(description = "페이지 크기", example = "8")

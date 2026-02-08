@@ -1,11 +1,11 @@
 package com.simvex.backend.domain.object3d.dto;
 
+import com.simvex.backend.domain.object3d.entity.Category;
 import com.simvex.backend.domain.object3d.entity.Object3D;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Schema(description = "오브젝트 목록 응답")
@@ -42,12 +42,10 @@ public class Object3DListResponseDto {
                 .build();
     }
 
-    private static List<String> parseCategories(String category) {
-        if (category == null || category.isBlank()) {
+    private static List<String> parseCategories(Category category) {
+        if (category == null) {
             return List.of();
         }
-        return Arrays.stream(category.split("/"))
-                .map(String::trim)
-                .toList();
+        return List.of(category.getParent().getKoreanName(), category.getKoreanName());
     }
 }

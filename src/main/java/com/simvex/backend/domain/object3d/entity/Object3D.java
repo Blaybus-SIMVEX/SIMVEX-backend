@@ -3,7 +3,6 @@ package com.simvex.backend.domain.object3d.entity;
 import com.simvex.backend.domain.component.entity.Component;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,8 +34,8 @@ public class Object3D {
     @Column(name = "thumbnail_url", length = 500)
     private String thumbnailUrl;
 
-    @Column(length = 50)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @Column(columnDefinition = "TEXT")
     private String theory;
@@ -51,14 +50,4 @@ public class Object3D {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-    @Builder
-    private Object3D(String name, String nameEn, String description, String thumbnailUrl, String category, String theory) {
-        this.name = name;
-        this.nameEn = nameEn;
-        this.description = description;
-        this.thumbnailUrl = thumbnailUrl;
-        this.category = category;
-        this.theory = theory;
-    }
 }
