@@ -65,6 +65,8 @@ public class AiAssistantService {
                             new AssistantMessage(aiResponse)
                     );
 
+                    log.info(aiResponse);
+
                     // RDB 저장 (추가)
                     chatHistoryRepository.save(ChatHistory.of(
                             sessionToken, requestDto.getObject3DId(),
@@ -119,7 +121,7 @@ public class AiAssistantService {
                 3. 답변할 때 "제공된 자료에 따르면", "문서에 의하면", "학습 자료에는 없지만" 같은 출처 관련 표현은 절대 사용하지 마세요.
                 4. 마치 당신이 모든 것을 원래 알고 있던 것처럼 자연스럽게 설명해주세요.
                 5. 답변을 할 때는 존댓말을 사용하세요.
-                6. 줄바꿈이 필요한 부분에서는 가독성을 위해서 줄바꿈을 사용하세요.
+                6. 답변은 마크다운 형식으로 작성하세요. 문단을 구분할 때는 빈 줄(줄바꿈 2번)하고, 목록(-, 1.)과 굵은 글씨, 소제목(###)을 활용하여 가독성 높게 구성하세요.
                 
                 [Document]
                 %s
