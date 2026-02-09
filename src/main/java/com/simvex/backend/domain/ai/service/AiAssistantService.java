@@ -56,6 +56,7 @@ public class AiAssistantService {
                     String aiResponse = fullResponse.toString();
                     aiContextService.addConversation(
                             sessionToken,
+                            requestDto.getObject3DId().toString(),
                             new UserMessage(requestDto.getQuestion()),
                             new AssistantMessage(aiResponse)
                     );
@@ -92,7 +93,7 @@ public class AiAssistantService {
         }
 
         // 3. Context 구성
-        List<Message> context = aiContextService.getMessagesForPrompt(sessionToken);
+        List<Message> context = aiContextService.getMessagesForPrompt(sessionToken, requestDto.getObject3DId().toString());
 
         // 4. 프롬프트 구성
         String systemText = String.format("""

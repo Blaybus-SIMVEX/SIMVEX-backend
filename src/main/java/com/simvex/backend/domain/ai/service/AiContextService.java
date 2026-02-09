@@ -26,8 +26,10 @@ public class AiContextService {
     }
 
     // 대화 페어 저장 (질문-답변 묶음)
-    public void addConversation(String userId, UserMessage question, AssistantMessage answer) {
-        Deque<ConversationPair> conversations = contextCache.getIfPresent(userId);
+    public void addConversation(String userId, String object3dId, UserMessage question, AssistantMessage answer) {
+        String context_key = "userId:"+ userId + "object3dId:" + object3dId;
+
+        Deque<ConversationPair> conversations = contextCache.getIfPresent(context_key);
 
         if (conversations == null) {
             conversations = new ArrayDeque<>();
@@ -40,12 +42,14 @@ public class AiContextService {
             conversations.removeFirst();
         }
 
-        contextCache.put(userId, conversations);
+        contextCache.put(context_key, conversations);
     }
 
     // ChatClient용 메시지 리스트 변환
-    public List<Message> getMessagesForPrompt(String userId) {
-        Deque<ConversationPair> conversations = contextCache.getIfPresent(userId);
+    public List<Message> getMessagesForPrompt(String userId, String object3dId) {
+        String context_key = "userId:"+ userId + "object3dId:" + object3dId;
+
+        Deque<ConversationPair> conversations = contextCache.getIfPresent(context_key);
 
         if (conversations == null || conversations.isEmpty()) {
             return Collections.emptyList();
