@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 @Tag(name = "AI Assistant", description = "AI 챗봇 API")
@@ -24,8 +21,9 @@ public class AiAssistantController {
     @Operation(summary = "AI 채팅 (RAG 스트리밍)", description = "사용자의 질문에 대해 실시간 스트리밍으로 답변합니다.")
     @PostMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> chatStream(
-        @Valid @RequestBody AiChatRequestDto requestDto
+        @Valid @RequestBody AiChatRequestDto requestDto,
+        @RequestHeader("sessionToken") String sessionToken
     ) {
-        return aiAssistantService.chatStream(requestDto);
+        return aiAssistantService.chatStream(sessionToken, requestDto);
     }
 }
