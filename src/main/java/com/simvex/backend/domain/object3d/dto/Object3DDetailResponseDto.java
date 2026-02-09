@@ -57,6 +57,10 @@ public class Object3DDetailResponseDto {
         if (category == null) {
             return List.of();
         }
+        if (category.getParent() == null) {
+            // 최상위 카테고리인 경우
+            return List.of(category.getKoreanName());
+        }
         return List.of(category.getParent().getKoreanName(), category.getKoreanName());
     }
 }
