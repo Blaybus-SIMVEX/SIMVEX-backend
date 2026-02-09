@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface Object3DRepository extends JpaRepository<Object3D, Long> {
@@ -17,6 +18,10 @@ public interface Object3DRepository extends JpaRepository<Object3D, Long> {
     // 카테고리별 필터링 (포함 검색)
     @Query("SELECT o FROM Object3D o WHERE o.category LIKE %:category%")
     Page<Object3D> findByCategory(@Param("category") String category, Pageable pageable);
+
+    // Repository에 추가
+    @Query("SELECT o FROM Object3D o WHERE o.category IN :categories")
+    Page<Object3D> findByCategoryIn(@Param("categories") List<String> categories, Pageable pageable);
 
     // 상세 조회 (컴포넌트 함께 조회)
     @Query("SELECT o FROM Object3D o " +

@@ -13,6 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,12 +25,24 @@ public class Object3DService {
 
     // 오브젝트 리스트 조회 (카테고리 필터링 선택적)
     public PageResponse<Object3DListResponseDto> getObjects(Category category, Pageable pageable) {
+        if (category == null) {
+            return PageResponse.of(object3DRepository.findAll(pageable).map(Object3DListResponseDto::from));
+        }
+
+        // 상위 카테고리면 하위 카테고리들로 검색
+        if (category.getParent() == null) {
+            List<String> childNames = Arrays.stream(Category.values())
+                    .filter(c -> c.getParent() == category)
+                    .map(Enum::name)
+                    .toList();
+            return PageResponse.of(
+                    object3DRepository.findByCategoryIn(childNames, pageable)
+                            .map(Object3DListResponseDto::from));
+        }
+
         return PageResponse.of(
-                (category != null
-                        ? object3DRepository.findByCategory(category.name(), pageable)
-                        : object3DRepository.findAll(pageable))
-                .map(Object3DListResponseDto::from)
-        );
+                object3DRepository.findByCategory(category.name(), pageable)
+                        .map(Object3DListResponseDto::from));
     }
 
     // 오브젝트 상세 조회 (부품 목록 + 완제품 설명 포함)
