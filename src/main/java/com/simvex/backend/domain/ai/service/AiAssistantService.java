@@ -25,6 +25,7 @@ public class AiAssistantService {
 
     private final ChatClient.Builder chatClientBuilder;
     private final VectorStore vectorStore;
+    private final AiContextService aiContextService;
 
     // 스트리밍 답변 생성
     public Flux<String> chatStream(AiChatRequestDto requestDto) {
@@ -38,18 +39,34 @@ public class AiAssistantService {
 
         log.info(">>> [3] AI 모델 호출 시작 (경과시간: {}ms)", System.currentTimeMillis() - startTime);
 
+        // 2. AI 응답 수집용
+        StringBuilder fullResponse = new StringBuilder();
+
+        // 첫 번째 토큰일 때만 로그 출력 (너무 많음 방지)
+        // 하지만 여기서는 매번 찍지 않고, 첫 토큰 감지를 위해 별도 변수 처리가 어려우므로
+        // 간단히 로그를 남기거나, 디버그 레벨로 남깁니다.
+        // log.debug("토큰 수신: {}", token);
         return chatClient.prompt()
                 .messages(messages)
                 .stream()
                 .content()
                 .doOnSubscribe(s -> log.info(">>> [4] 스트림 구독 시작 (API 요청 전송)"))
-                .doOnNext(token -> {
-                    // 첫 번째 토큰일 때만 로그 출력 (너무 많음 방지)
-                    // 하지만 여기서는 매번 찍지 않고, 첫 토큰 감지를 위해 별도 변수 처리가 어려우므로
-                    // 간단히 로그를 남기거나, 디버그 레벨로 남깁니다.
-                    // log.debug("토큰 수신: {}", token); 
-                })
-                .doOnComplete(() -> log.info(">>> [5] 스트리밍 완료 (총 소요시간: {}ms)", System.currentTimeMillis() - startTime));
+                .doOnNext(fullResponse::append)
+                .doOnComplete(() -> {
+                    String aiResponse = fullResponse.toString();
+                    aiContextService.addConversation(
+                            requestDto.getUserId(),
+                            new UserMessage(requestDto.getQuestion()),
+                            new AssistantMessage(aiResponse)
+                    );
+
+                    log.info(aiContextService.getConversationHistory(requestDto.getUserId()).toString());
+
+                    log.info(
+                            ">>> [5] 스트리밍 완료 (총 소요시간: {}ms)",
+                            System.currentTimeMillis() - startTime
+                    );
+                });
     }
 
     // 프롬프트 및 메시지 생성 로직 분리
@@ -67,8 +84,8 @@ public class AiAssistantService {
         log.info(">>> [2] Pinecone 검색 완료 (문서 {}개, 경과시간: {}ms)", 
                 similarDocuments.size(), System.currentTimeMillis() - startTime);
 
-        // 2. Context 구성
-        String context = similarDocuments.stream()
+        // 2. Document 구성
+        String document = similarDocuments.stream()
                 .map(Document::getText)
                 .collect(Collectors.joining("\n\n"));
 
@@ -76,34 +93,34 @@ public class AiAssistantService {
             log.warn("관련 문서를 찾지 못했습니다. objectId: {}", requestDto.getObject3DId());
         }
 
-        // 3. 프롬프트 구성
-        String systemText = """
+        // 3. Context 구성
+        List<Message> context = aiContextService.getMessagesForPrompt(requestDto.getUserId());
+        log.info(context.toString());
+
+        // 4. 프롬프트 구성
+        String systemText = String.format("""
+                [Role]
                 당신은 공학 교육을 돕는 AI 튜터입니다.
                 학습자의 질문에 친절하고 정확하게 답변해주세요.
                 
-                [지침]
-                1. 아래 제공된 [Context] 정보를 최우선으로 참고하여 답변하세요.
-                2. 만약 [Context]에 정보가 없거나 부족하다면, 당신이 가진 일반적인 지식을 활용하여 자연스럽게 답변하세요.
+                [Rule]
+                1. 아래 제공된 [Document] 정보를 최우선으로 참고하여 답변하세요.
+                2. 만약 [Document]에 정보가 없거나 부족하다면, 당신이 가진 일반적인 지식을 활용하여 자연스럽게 답변하세요.
                 3. 답변할 때 "제공된 자료에 따르면", "문서에 의하면", "학습 자료에는 없지만" 같은 출처 관련 표현은 절대 사용하지 마세요.
                 4. 마치 당신이 모든 것을 원래 알고 있던 것처럼 자연스럽게 설명해주세요.
                 
+                [Document]
+                %s
+                
                 [Context]
                 %s
-                """.formatted(context);
+                """,
+                document,
+                context
+        );
 
         List<Message> messages = new ArrayList<>();
         messages.add(new SystemMessage(systemText));
-
-        // 대화 히스토리 추가
-        if (requestDto.getConversationHistory() != null) {
-            for (AiChatRequestDto.ChatMessage msg : requestDto.getConversationHistory()) {
-                if ("user".equalsIgnoreCase(msg.getRole())) {
-                    messages.add(new UserMessage(msg.getContent()));
-                } else if ("assistant".equalsIgnoreCase(msg.getRole())) {
-                    messages.add(new AssistantMessage(msg.getContent()));
-                }
-            }
-        }
 
         messages.add(new UserMessage(requestDto.getQuestion()));
         

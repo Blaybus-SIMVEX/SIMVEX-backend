@@ -45,7 +45,11 @@ dependencies {
     // Spring AI - PDF 문서 리더
     implementation 'org.springframework.ai:spring-ai-pdf-document-reader'
 
-    // swagger (Spring Boot 3.x 호환 버전으로 업데이트)
+    // InMemory Cache
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
+
+    // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
 
     compileOnly 'org.projectlombok:lombok'
