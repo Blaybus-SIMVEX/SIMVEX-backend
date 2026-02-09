@@ -23,25 +23,25 @@ public class Object3DService {
 
     private final Object3DRepository object3DRepository;
 
-    // 오브젝트 리스트 조회 (카테고리 필터링 선택적)
     public PageResponse<Object3DListResponseDto> getObjects(Category category, Pageable pageable) {
         if (category == null) {
-            return PageResponse.of(object3DRepository.findAll(pageable).map(Object3DListResponseDto::from));
+            return PageResponse.of(
+                    object3DRepository.findAll(pageable).map(Object3DListResponseDto::from));
         }
 
-        // 상위 카테고리면 하위 카테고리들로 검색
+        // 상위 카테고리면 하위 카테고리들 전부 조회
         if (category.getParent() == null) {
-            List<String> childNames = Arrays.stream(Category.values())
+            List<Category> children = Arrays.stream(Category.values())
                     .filter(c -> c.getParent() == category)
-                    .map(Enum::name)
                     .toList();
             return PageResponse.of(
-                    object3DRepository.findByCategoryIn(childNames, pageable)
+                    object3DRepository.findByCategoryIn(children, pageable)
                             .map(Object3DListResponseDto::from));
         }
 
+        // 하위 카테고리면 정확히 해당 카테고리만 조회
         return PageResponse.of(
-                object3DRepository.findByCategory(category.name(), pageable)
+                object3DRepository.findByCategory(category, pageable)
                         .map(Object3DListResponseDto::from));
     }
 
