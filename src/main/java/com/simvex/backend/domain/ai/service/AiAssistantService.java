@@ -55,12 +55,10 @@ public class AiAssistantService {
                 .doOnComplete(() -> {
                     String aiResponse = fullResponse.toString();
                     aiContextService.addConversation(
-                            requestDto.getUserId(),
+                            requestDto.getSessionToken(),
                             new UserMessage(requestDto.getQuestion()),
                             new AssistantMessage(aiResponse)
                     );
-
-                    log.info(aiContextService.getConversationHistory(requestDto.getUserId()).toString());
 
                     log.info(
                             ">>> [5] 스트리밍 완료 (총 소요시간: {}ms)",
@@ -94,8 +92,7 @@ public class AiAssistantService {
         }
 
         // 3. Context 구성
-        List<Message> context = aiContextService.getMessagesForPrompt(requestDto.getUserId());
-        log.info(context.toString());
+        List<Message> context = aiContextService.getMessagesForPrompt(requestDto.getSessionToken());
 
         // 4. 프롬프트 구성
         String systemText = String.format("""
