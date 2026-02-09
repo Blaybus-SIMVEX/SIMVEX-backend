@@ -1,6 +1,9 @@
 package com.simvex.backend.domain.ai.service;
 
 import com.simvex.backend.domain.ai.dto.AiChatRequestDto;
+import com.simvex.backend.domain.ai.dto.ChatHistoryResponseDto;
+import com.simvex.backend.domain.ai.entity.ChatHistory;
+import com.simvex.backend.domain.ai.repository.ChatHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -26,6 +29,7 @@ public class AiAssistantService {
     private final ChatClient.Builder chatClientBuilder;
     private final VectorStore vectorStore;
     private final AiContextService aiContextService;
+    private final ChatHistoryRepository chatHistoryRepository;
 
     // 스트리밍 답변 생성
     public Flux<String> chatStream(String sessionToken, AiChatRequestDto requestDto) {
@@ -60,6 +64,14 @@ public class AiAssistantService {
                             new UserMessage(requestDto.getQuestion()),
                             new AssistantMessage(aiResponse)
                     );
+
+                    // RDB 저장 (추가)
+                    chatHistoryRepository.save(ChatHistory.of(
+                            sessionToken, requestDto.getObject3DId(),
+                            ChatHistory.MessageRole.USER, requestDto.getQuestion()));
+                    chatHistoryRepository.save(ChatHistory.of(
+                            sessionToken, requestDto.getObject3DId(),
+                            ChatHistory.MessageRole.ASSISTANT, aiResponse));
 
                     log.info(
                             ">>> [5] 스트리밍 완료 (총 소요시간: {}ms)",
@@ -123,5 +135,13 @@ public class AiAssistantService {
         messages.add(new UserMessage(requestDto.getQuestion()));
         
         return messages;
+    }
+
+    public List<ChatHistoryResponseDto> getChatHistory(String sessionToken, Long object3dId) {
+        return chatHistoryRepository
+                .findBySessionTokenAndObject3dIdOrderByCreatedAtAsc(sessionToken, object3dId)
+                .stream()
+                .map(ChatHistoryResponseDto::from)
+                .toList();
     }
 }
