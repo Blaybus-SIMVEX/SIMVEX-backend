@@ -60,17 +60,6 @@ public class AiContextService {
         return messages;
     }
 
-    // 대화 내역 조회 (API 응답용)
-    public List<ConversationPair> getConversationHistory(String userId) {
-        Deque<ConversationPair> conversations = contextCache.getIfPresent(userId);
-        return conversations != null ? new ArrayList<>(conversations) : Collections.emptyList();
-    }
-
-    // 문맥 삭제
-    public void clearContext(String userId) {
-        contextCache.invalidate(userId);
-    }
-
     // 내부 클래스: 대화 페어
     public record ConversationPair(
             UserMessage userMessage,
