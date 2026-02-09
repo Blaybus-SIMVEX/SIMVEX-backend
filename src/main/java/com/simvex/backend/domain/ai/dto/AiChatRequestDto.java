@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AiChatRequestDto {
 
-    @NotNull(message = "User ID is required")
-    private String sessionToken;
-
     @NotNull(message = "Object3D ID is required")
     private Long object3DId;
 

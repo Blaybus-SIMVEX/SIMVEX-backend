@@ -28,14 +28,14 @@ public class AiAssistantService {
     private final AiContextService aiContextService;
 
     // 스트리밍 답변 생성
-    public Flux<String> chatStream(AiChatRequestDto requestDto) {
+    public Flux<String> chatStream(String sessionToken, AiChatRequestDto requestDto) {
         long startTime = System.currentTimeMillis();
         log.info(">>> [1] 요청 시작 - objectId: {}", requestDto.getObject3DId());
 
         ChatClient chatClient = chatClientBuilder.build();
         
         // 프롬프트 생성 (검색 포함)
-        List<Message> messages = createPromptMessages(requestDto, startTime);
+        List<Message> messages = createPromptMessages(sessionToken, requestDto, startTime);
 
         log.info(">>> [3] AI 모델 호출 시작 (경과시간: {}ms)", System.currentTimeMillis() - startTime);
 
@@ -55,7 +55,7 @@ public class AiAssistantService {
                 .doOnComplete(() -> {
                     String aiResponse = fullResponse.toString();
                     aiContextService.addConversation(
-                            requestDto.getSessionToken(),
+                            sessionToken,
                             new UserMessage(requestDto.getQuestion()),
                             new AssistantMessage(aiResponse)
                     );
@@ -68,7 +68,7 @@ public class AiAssistantService {
     }
 
     // 프롬프트 및 메시지 생성 로직 분리
-    private List<Message> createPromptMessages(AiChatRequestDto requestDto, long startTime) {
+    private List<Message> createPromptMessages(String sessionToken, AiChatRequestDto requestDto, long startTime) {
         // 1. RAG 검색 (Pinecone)
         String filterExpression = "objectId == '" + requestDto.getObject3DId() + "'";
 
@@ -92,7 +92,7 @@ public class AiAssistantService {
         }
 
         // 3. Context 구성
-        List<Message> context = aiContextService.getMessagesForPrompt(requestDto.getSessionToken());
+        List<Message> context = aiContextService.getMessagesForPrompt(sessionToken);
 
         // 4. 프롬프트 구성
         String systemText = String.format("""

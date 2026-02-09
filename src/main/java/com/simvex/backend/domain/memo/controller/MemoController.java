@@ -28,7 +28,7 @@ public class MemoController {
             @Parameter(description = "오브젝트 ID", required = true)
             @PathVariable Long objectId,
             @Parameter(description = "세션 토큰", required = true)
-            @RequestHeader("X-Session-Token") String sessionToken,
+            @RequestHeader("sessionToken") String sessionToken,
             @Parameter(description = "페이지 번호 (1부터 시작)", example = "1")
             @RequestParam(defaultValue = "1") int page,
             @Parameter(description = "페이지 크기", example = "8")
@@ -44,7 +44,7 @@ public class MemoController {
             @Parameter(description = "오브젝트 ID", required = true)
             @PathVariable Long objectId,
             @Parameter(description = "세션 토큰", required = true)
-            @RequestHeader("X-Session-Token") String sessionToken,
+            @RequestHeader("sessionToken") String sessionToken,
             @RequestBody MemoCreateRequestDto request
     ) {
         MemoResponseDto memo = memoService.createMemo(objectId, sessionToken, request);
@@ -57,7 +57,7 @@ public class MemoController {
             @Parameter(description = "메모 ID", required = true)
             @PathVariable Long memoId,
             @Parameter(description = "세션 토큰", required = true)
-            @RequestHeader("X-Session-Token") String sessionToken,
+            @RequestHeader("sessionToken") String sessionToken,
             @RequestBody MemoUpdateRequestDto request
     ) {
         MemoResponseDto memo = memoService.updateMemo(memoId, sessionToken, request);
@@ -70,7 +70,7 @@ public class MemoController {
             @Parameter(description = "메모 ID", required = true)
             @PathVariable Long memoId,
             @Parameter(description = "세션 토큰", required = true)
-            @RequestHeader("X-Session-Token") String sessionToken
+            @RequestHeader("sessionToken") String sessionToken
     ) {
         memoService.deleteMemo(memoId, sessionToken);
         return ApiResponse.success(HttpStatus.OK, "메모 삭제 성공", null);
